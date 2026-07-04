@@ -64,3 +64,77 @@ def initialize_from_pdfs():
 
         with open(METADATA_FILE, "w") as file:
             json.dump(metadata, file, indent=4)
+
+# Load stored index and metadata
+def load_index():
+
+    if os.path.exists(INDEX_FILE):
+        index = faiss.read_index(INDEX_FILE)
+
+        with open(METADATA_FILE, "r") as file:
+            metadata = json.load(file)
+
+    else:
+        index = None
+        metadata = []
+
+    return index, metadata
+
+
+# Save index and metadata
+def save_index(index, metadata):
+
+    faiss.write_index(index, INDEX_FILE)
+
+    with open(METADATA_FILE, "w") as file:
+        json.dump(metadata, file, indent=4)
+
+
+# Add new idea to database
+def add_new_idea(text, source="user_input"):
+
+    index, metadata = load_index()
+
+    embedding = model.encode(text).astype("float32")
+
+    if index is None:
+        dimension = embedding.shape[0]
+        index = faiss.IndexFlatL2(dimension)
+
+    index.add(np.array([embedding]))
+
+    metadata.append({
+        "idea": text,
+        "source": source
+    })
+
+    save_index(index, metadata)
+
+
+# Search for similar ideas
+def search_similar(query, k=5):
+
+    index, metadata = load_index()
+
+    if index is None or len(metadata) == 0:
+        return []
+
+    query_vector = model.encode(query).reshape(1, -1).astype("float32")
+
+    distances, indices = index.search(query_vector, k)
+
+    results = []
+
+    for i, idx in enumerate(indices[0]):
+
+        matched_item = metadata[idx]
+
+        score = 1 / (1 + distances[0][i])
+
+        results.append({
+            "idea": matched_item["idea"],
+            "source": matched_item["source"],
+            "score": float(score)
+        })
+
+    return results
