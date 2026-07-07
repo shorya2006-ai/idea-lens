@@ -25,6 +25,7 @@ def extract_text_from_pdf(file_path):
 
     return text
 
+
 # Initialize vector database from existing PDF files
 def initialize_from_pdfs():
 
@@ -39,7 +40,6 @@ def initialize_from_pdfs():
     for file_name in os.listdir(DATA_FOLDER):
         if not file_name.endswith(".pdf"):
             continue
-
         file_path = os.path.join(DATA_FOLDER, file_name)
         text = extract_text_from_pdf(file_path)
 
@@ -65,6 +65,7 @@ def initialize_from_pdfs():
         with open(METADATA_FILE, "w") as file:
             json.dump(metadata, file, indent=4)
 
+
 # Load stored index and metadata
 def load_index():
 
@@ -79,7 +80,6 @@ def load_index():
         metadata = []
 
     return index, metadata
-
 
 # Save index and metadata
 def save_index(index, metadata):
@@ -137,4 +137,5 @@ def search_similar(query, k=5):
             "score": float(score)
         })
 
-    return results
+    return results    
+            
