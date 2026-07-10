@@ -122,3 +122,104 @@ def extract_text_from_file(uploaded_file):
         text = ""
 
     return text
+# ---------------- AI EXPLANATION ----------------
+
+def generate_ai_explanation(input_text, matched_text, score):
+    try:
+        if not matched_text:
+            return "No matched content available to generate explanation."
+
+        input_words = set(input_text.lower().split())
+        matched_words = set(matched_text.lower().split())
+
+        common_words = list(input_words.intersection(matched_words))
+
+        if score > 0.75:
+            level = "highly similar"
+        elif score > 0.5:
+            level = "moderately similar"
+        else:
+            level = "mostly different"
+
+        explanation = f"The ideas are {level}."
+
+        if common_words:
+            explanation += (
+                " Common keywords include: "
+                + ", ".join(common_words[:8])
+            )
+        else:
+            explanation += (
+                " There are no strong overlapping keywords "
+                "but conceptual similarity exists."
+            )
+
+        return explanation
+
+    except:
+        return "AI explanation could not be generated"
+
+
+# ---------- CONTRIBUTOR ANALYTICS ----------
+
+CONTRIBUTOR_FILE = "contributions.json"
+
+
+def load_contributions():
+    try:
+        if os.path.exists(CONTRIBUTOR_FILE):
+            with open(CONTRIBUTOR_FILE, "r") as f:
+                return json.load(f)
+    except:
+        pass
+
+    return {}
+
+
+def save_contributions(data):
+    try:
+        with open(CONTRIBUTOR_FILE, "w") as f:
+            json.dump(data, f, indent=4)
+    except:
+        pass
+
+
+def increment_contribution(emp_id):
+    try:
+        data = load_contributions()
+        data[emp_id] = data.get(emp_id, 0) + 1
+        save_contributions(data)
+    except:
+        pass
+
+
+def get_top_contributors(top_n=5):
+    try:
+        data = load_contributions()
+
+        sorted_data = sorted(
+            data.items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        return sorted_data[:top_n]
+
+    except:
+        return []
+
+
+# ---------------- SEARCH HISTORY ----------------
+
+SEARCH_HISTORY_FILE = "search_history.json"
+
+
+def load_search_history():
+    if not os.path.exists(SEARCH_HISTORY_FILE):
+        return {}
+
+    try:
+        with open(SEARCH_HISTORY_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return {}
