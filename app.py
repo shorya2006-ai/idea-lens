@@ -298,3 +298,67 @@ def add_search_history(emp_id, search_text):
 
     save_search_history(data)
 
+# ---------------- DASHBOARD ----------------
+
+if st.session_state.page == "dashboard":
+
+    st.markdown(
+        "<h1 style='text-align:center;'>AI Idea Duplicate Detector</h1>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Admin Login", use_container_width=True):
+            st.session_state.page = "admin_login"
+
+    with col2:
+        if st.button("Employee Login", use_container_width=True):
+            st.session_state.page = "employee_login"
+
+
+# ---------------- ADMIN LOGIN ----------------
+
+elif st.session_state.page == "admin_login":
+
+    st.title("Admin Login")
+
+    admin_id = st.text_input("Admin ID")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+
+        admins = load_admin_credentials_from_pdf()
+
+        if (
+            admin_id in admins and
+            password == admins[admin_id]["password"]
+        ):
+            st.session_state.user_type = "admin"
+            st.session_state.admin_name = admins[admin_id]["name"]
+            st.session_state.page = "main"
+
+        else:
+            st.error("Invalid credentials")
+
+
+# ---------------- EMPLOYEE LOGIN ----------------
+
+elif st.session_state.page == "employee_login":
+
+    st.title("Employee Login")
+
+    emp_id = st.text_input("Employee ID")
+
+    if st.button("Login"):
+
+        valid_ids = load_employee_ids_from_pdf()
+
+        if emp_id in valid_ids:
+            st.session_state.user_type = "employee"
+            st.session_state.emp_id = emp_id
+            st.session_state.page = "main"
+
+        else:
+            st.error("Invalid Employee ID")
