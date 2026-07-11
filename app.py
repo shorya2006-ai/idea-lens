@@ -217,6 +217,36 @@ SEARCH_HISTORY_FILE = "search_history.json"
 def load_search_history():
     if not os.path.exists(SEARCH_HISTORY_FILE):
         return {}
+# ---------------- IDEA STATUS ----------------
+
+IDEA_STATUS_FILE = "idea_status.json"
+
+
+def load_idea_status():
+    if not os.path.exists(IDEA_STATUS_FILE):
+        return {}
+
+    try:
+        with open(IDEA_STATUS_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return {}
+
+
+def save_idea_status(data):
+    with open(IDEA_STATUS_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+def add_idea_status(file_name, employee):
+    data = load_idea_status()
+
+    data[file_name] = {
+        "employee": employee,
+        "status": "Pending",
+        "viewed": False
+    }
+
 
     try:
         with open(SEARCH_HISTORY_FILE, "r") as f:
