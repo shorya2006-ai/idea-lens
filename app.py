@@ -253,3 +253,48 @@ def add_idea_status(file_name, employee):
             return json.load(f)
     except:
         return {}
+
+ save_idea_status(data)
+
+
+def update_idea_status(file_name, status):
+    data = load_idea_status()
+
+    if file_name in data:
+        data[file_name]["status"] = status
+        data[file_name]["viewed"] = True
+
+    save_idea_status(data)
+
+
+# ---------------- SEARCH HISTORY ----------------
+
+SEARCH_HISTORY_FILE = "search_history.json"
+
+
+def load_search_history():
+    if not os.path.exists(SEARCH_HISTORY_FILE):
+        return {}
+
+    try:
+        with open(SEARCH_HISTORY_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return {}
+
+
+def save_search_history(data):
+    with open(SEARCH_HISTORY_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+def add_search_history(emp_id, search_text):
+    data = load_search_history()
+
+    if emp_id not in data:
+        data[emp_id] = []
+
+    data[emp_id].append(search_text)
+
+    save_search_history(data)
+
