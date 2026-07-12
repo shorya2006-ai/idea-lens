@@ -412,3 +412,80 @@ elif st.session_state.page == "main":
                 st.rerun()
 
         st.write(f"Admin: {st.session_state.admin_name}")
+ # ---------------- CONTRIBUTOR GRAPH ----------------
+
+    from collections import Counter
+
+    def get_top_contributors():
+        _, metadata = load_index()
+
+        contributors = []
+
+        for item in metadata:
+            source = item.get("source", "")
+
+            if "(" in source and ")" in source:
+                try:
+                    employee = source.split("(")[-1].replace(")", "").strip()
+                    contributors.append(employee)
+                except:
+                    pass
+
+        counts = Counter(contributors)
+
+        return list(counts.items())
+
+
+    top_contributors = get_top_contributors()
+
+    if top_contributors:
+
+        df = pd.DataFrame(
+            top_contributors,
+            columns=[
+                "Employee ID",
+                "Ideas Submitted"
+            ]
+        )
+
+        fig = px.bar(
+            df,
+            x="Employee ID",
+            y="Ideas Submitted",
+            title="Contributor's Graph"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        table_df = df.copy()
+
+        table_df.insert(
+            0,
+            "S.No",
+            range(1, len(table_df) + 1)
+        )
+
+        st.subheader("Contributor Details")
+
+        styled_df = (
+            table_df.style
+            .set_properties(**{"text-align": "center"})
+            .set_table_styles([
+                {
+                    "selector": "th",
+                    "props": [("text-align", "center")]
+                }
+            ])
+        )
+
+        st.dataframe(
+            styled_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+    else:
+        st.sidebar.info("No contributions recorded yet.")
