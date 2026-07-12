@@ -489,3 +489,41 @@ elif st.session_state.page == "main":
 
     else:
         st.sidebar.info("No contributions recorded yet.")
+ # ---------------- EMPLOYEE VIEW ----------------
+
+    if st.session_state.user_type == "employee":
+        st.write(f"Employee: {st.session_state.emp_id}")
+
+    data_folder = "pdf_data"
+    os.makedirs(data_folder, exist_ok=True)
+
+    all_files = os.listdir(data_folder)
+
+    # ---------------- ADMIN PENDING APPROVALS ----------------
+
+    if st.session_state.user_type == "admin":
+
+        idea_data = load_idea_status()
+
+        pending = [
+            file
+            for file, details in idea_data.items()
+            if details["viewed"] == False
+        ]
+
+        st.sidebar.markdown("---")
+        st.sidebar.subheader("Pending For Your Approval")
+
+        if pending:
+            for item in pending:
+                st.sidebar.write(item)
+        else:
+            st.sidebar.success("No Pending Approvals")
+
+    # ---------------- SIDEBAR FILE SEARCH ----------------
+
+    st.sidebar.header("Files")
+
+    search = st.sidebar.text_input("Search")
+
+    if search and len
