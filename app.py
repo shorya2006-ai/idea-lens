@@ -362,3 +362,53 @@ elif st.session_state.page == "employee_login":
 
         else:
             st.error("Invalid Employee ID")
+# ---------------- MAIN ----------------
+
+elif st.session_state.page == "main":
+
+    # Top Bar
+    col1, col2 = st.columns([10, 1])
+
+    with col1:
+        st.title("AI Idea Duplicate Detector")
+
+    with col2:
+        if st.button("Logout"):
+            st.session_state.page = "dashboard"
+            st.session_state.user_type = None
+            st.rerun()
+
+    # ---------------- ADMIN CONTROLS ----------------
+
+    if st.session_state.user_type == "admin":
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            if st.button("Revisit Idea"):
+                update_idea_status(
+                    st.session_state.selected_preview_file,
+                    "Revisit"
+                )
+                st.success("Idea marked for revisit.")
+                st.rerun()
+
+        with col2:
+            if st.button("Idea Approved"):
+                update_idea_status(
+                    st.session_state.selected_preview_file,
+                    "Approved"
+                )
+                st.success("Idea approved.")
+                st.rerun()
+
+        with col3:
+            if st.button("Idea Implemented"):
+                update_idea_status(
+                    st.session_state.selected_preview_file,
+                    "Implemented"
+                )
+                st.success("Idea implemented.")
+                st.rerun()
+
+        st.write(f"Admin: {st.session_state.admin_name}")
