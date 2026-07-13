@@ -607,3 +607,78 @@ if filtered:
 
 else:
     st.sidebar.info("No files found")
+# ---------------- UPLOAD HISTORY ----------------
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Upload History")
+
+_, metadata = load_index()
+
+uploads_by_employee = {}
+
+for item in metadata:
+
+    source = item.get("source", "")
+
+    if "(" in source and ")" in source:
+
+        try:
+            employee = source.split("(")[-1].replace(")", "").strip()
+
+            if employee not in uploads_by_employee:
+                uploads_by_employee[employee] = []
+
+            uploads_by_employee[employee].append(source)
+
+        except:
+            pass
+
+
+# -------- Employee Upload History --------
+
+if st.session_state.user_type == "employee":
+
+    emp_id = st.session_state.emp_id
+
+    employee_uploads = uploads_by_employee.get(
+        emp_id,
+        []
+    )
+
+    if employee_uploads:
+
+        for upload in reversed(employee_uploads[-10:]):
+            st.sidebar.write(upload)
+
+    else:
+        st.sidebar.info("No uploads found.")
+
+
+# -------- Admin Upload History --------
+
+elif st.session_state.user_type == "admin":
+
+    employee_list = sorted(
+        uploads_by_employee.keys()
+    )
+
+    if employee_list:
+
+        selected_employee = st.sidebar.selectbox(
+            "Select Employee Upload History",
+            employee_list,
+            key="upload_history_selector"
+        )
+
+        employee_uploads = uploads_by_employee.get(
+            selected_employee,
+            []
+        )
+
+        if employee_uploads:
+
+            for upload in reversed(employee_uploads[-20:]):
+                st.sidebar.write(upload)
+
+        else:
+            st.sidebar.info("No uploads found.")
