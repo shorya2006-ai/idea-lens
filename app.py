@@ -682,3 +682,52 @@ elif st.session_state.user_type == "admin":
 
         else:
             st.sidebar.info("No uploads found.")
+# ---------------- SEARCH HISTORY ----------------
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("Search History")
+
+history_data = load_search_history()
+
+if st.session_state.user_type == "employee":
+
+    emp_id = st.session_state.emp_id
+
+    employee_history = history_data.get(
+        emp_id,
+        []
+    )
+
+    if employee_history:
+
+        for search in reversed(employee_history[-10:]):
+            st.sidebar.write(search)
+
+    else:
+        st.sidebar.info("No search history.")
+
+elif st.session_state.user_type == "admin":
+
+    all_employees = sorted(history_data.keys())
+
+    if all_employees:
+
+        selected_employee = st.sidebar.selectbox(
+            "Select Employee",
+            all_employees
+        )
+
+        employee_history = history_data.get(
+            selected_employee,
+            []
+        )
+
+        if employee_history:
+
+            for search in reversed(employee_history[-20:]):
+                st.sidebar.write(search)
+
+        else:
+            st.sidebar.info(
+                "No search history available."
+            )
