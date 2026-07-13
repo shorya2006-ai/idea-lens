@@ -527,3 +527,83 @@ elif st.session_state.page == "main":
     search = st.sidebar.text_input("Search")
 
     if search and len
+if filtered:
+
+    selected_file = st.sidebar.selectbox(
+        "Select File",
+        filtered
+    )
+
+    if (
+        st.session_state.user_type == "admin"
+        and selected_file
+    ):
+
+        file_path = os.path.join(
+            data_folder,
+            selected_file
+        )
+
+        try:
+
+            class UploadedFileMock:
+
+                def _init_(self, path):
+                    self.name = path.name
+                    self.type = ""
+                    self.file = open(path, "rb")
+
+                def read(self):
+                    return self.file.read()
+
+            preview_content = extract_text_from_file(
+                UploadedFileMock(Path(file_path))
+            )
+
+            st.subheader("Idea Content")
+
+            st.text_area(
+                "Preview",
+                preview_content,
+                height=400
+            )
+
+        except Exception as e:
+            st.warning(f"Preview unavailable: {e}")
+
+    if os.path.exists(file_path):
+
+        col1, col2 = st.sidebar.columns(2)
+
+        with col1:
+            with open(file_path, "rb") as file:
+                st.download_button(
+                    label="Download File",
+                    data=file.read(),
+                    file_name=selected_file,
+                    mime="application/octet-stream",
+                    key="download_btn"
+                )
+
+        if st.session_state.user_type == "admin":
+
+            with col2:
+                if st.button(
+                    "Delete File",
+                    key="delete_file_btn"
+                ):
+
+                    try:
+                        os.remove(file_path)
+                        st.success(
+                            f"{selected_file} deleted successfully."
+                        )
+                        st.rerun()
+
+                    except Exception as e:
+                        st.error(
+                            f"Error deleting file: {str(e)}"
+                        )
+
+else:
+    st.sidebar.info("No files found")
