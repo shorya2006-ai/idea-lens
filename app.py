@@ -731,3 +731,96 @@ elif st.session_state.user_type == "admin":
             st.sidebar.info(
                 "No search history available."
             )
+# ---------------- INPUT ----------------
+
+uploaded_file = st.file_uploader(
+    "Upload File",
+    type=["pdf", "docx", "pptx"]
+)
+
+idea = st.text_area(
+    "Enter Idea *",
+    placeholder="Enter your idea here...",
+    help="This field is mandatory. File upload is optional."
+)
+
+final_input = ""
+
+col1, col2 = st.columns(2)
+
+with col1:
+    check_clicked = st.button("Check Similarity")
+
+with col2:
+    upload_clicked = st.button("Upload Idea")
+
+# ---------------- CHECK SIMILARITY ----------------
+
+if check_clicked:
+
+    if not idea.strip():
+        st.error("Please enter an idea before checking similarity.")
+        st.stop()
+
+    final_input = idea.strip()
+
+    if uploaded_file:
+        file_text = extract_text_from_file(uploaded_file)
+
+        final_input = f"""
+User Idea:
+{idea}
+
+Supporting Document:
+{file_text}
+"""
+
+# ---------------- UPLOAD IDEA ----------------
+
+if upload_clicked:
+
+    user = st.session_state.get("emp_id", "admin")
+
+    if not idea.strip():
+        st.error("Please enter an idea before uploading.")
+        st.stop()
+
+    # Duplicate Check
+    duplicate_results = search_similar(
+        idea.strip(),
+        k=1
+    )
+
+    if duplicate_results:
+
+        duplicate_score = duplicate_results[0]["score"]
+
+        if duplicate_score >= 0.70:
+            st.error(
+                "You cannot upload the file as similar idea already exists in the repository."
+            )
+            st.stop()
+
+    # -------- Upload with File --------
+
+    if uploaded_file:
+
+        existing_files = os.listdir(data_folder)
+
+        if uploaded_file.name in existing_files:
+            st.error(
+                "This file already exists in the repository."
+            )
+            st.stop()
+
+        text = extract_text_from_file(uploaded_file)
+
+        add_new_idea(
+            text,
+            source=f"{uploaded_file.name} ({user})"
+        )
+
+        add_idea_status(
+            uploaded_file.name,
+            user
+        )
