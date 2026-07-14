@@ -824,3 +824,37 @@ if upload_clicked:
             uploaded_file.name,
             user
         )
+# -------- Manual Idea --------
+
+    else:
+
+        results = search_similar(
+            idea.strip(),
+            k=1
+        )
+
+        if results:
+
+            score = results[0]["score"]
+
+            if score >= 0.70:
+                st.error(
+                    "You can't upload the file. A highly similar idea already exists in the repository."
+                )
+                st.stop()
+
+        manual_name = (
+            f"Manual_Idea_{user}{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        )
+
+        add_new_idea(
+            idea.strip(),
+            source=f"Manual Idea ({user})"
+        )
+
+        add_idea_status(
+            manual_name,
+            user
+        )
+
+    st.success("Idea uploaded successfully!")
