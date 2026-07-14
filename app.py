@@ -858,3 +858,86 @@ if upload_clicked:
         )
 
     st.success("Idea uploaded successfully!")
+# ---------------- SIMILARITY RESULTS ----------------
+
+if final_input:
+
+    user = st.session_state.get("emp_id", "admin")
+
+    add_search_history(
+        user,
+        final_input[:100]
+    )
+
+    results = search_similar(final_input)
+
+    if results:
+
+        st.subheader("Similarity Results")
+
+        for idx, item in enumerate(results, start=1):
+
+            score = item.get("score", 0)
+
+            st.session_state.last_similarity_score = score
+
+            if score >= 0.70:
+                st.session_state.duplicate_detected = True
+            else:
+                st.session_state.duplicate_detected = False
+
+            source = item.get("source", "Unknown")
+            matched_text = item.get("idea", "")
+
+            st.markdown(f"### Match {idx}")
+
+            st.metric(
+                "Similarity Score",
+                f"{score:.2%}"
+            )
+
+            st.write("Source:", source)
+
+            if matched_text:
+
+                st.text_area(
+                    f"Matched Content {idx}",
+                    matched_text[:500],
+                    height=150,
+                    key=f"match_{idx}"
+                )
+
+                basic_explanation = generate_ai_explanation(
+                    final_input,
+                    matched_text,
+                    score
+                )
+
+                st.write("Similarity Explanation")
+                st.info(basic_explanation)
+
+                groq_analysis = generate_groq_analysis(
+                    final_input,
+                    matched_text,
+                    score
+                )
+
+                st.write("AI Expert Review")
+                st.success(groq_analysis)
+
+            if score >= 0.70:
+                st.error("Duplicate")
+
+            elif score >= 0.50:
+                st.warning("Similar")
+
+            else:
+                st.success("Unique")
+
+            st.markdown("---")
+
+    else:
+        st.warning("No similar ideas found.")
+
+else:
+    st.warning("Enter an idea or upload a file.")
