@@ -28,5 +28,20 @@ if "selected_review_file" not in st.session_state:
 st.session_state.selected_review_file = None
 if "pending_status_action" not in st.session_state:
 st.session_state.pending_status_action = None
+# ---------------- EMPLOYEE PDF ----------------
+def load_employee_ids_from_pdf(pdf_path="employee_database_100.pdf"):
+emp_ids = set()
+try:
+with pdfplumber.open(pdf_path) as pdf:
+for page in pdf.pages:
+text = page.extract_text()
+if text:
+for line in text.split("\n"):
+parts = line.split()
+if parts and parts[0].startswith("EMP"):
+emp_ids.add(parts[0])
+except:
+pass
+return emp_ids
 if "pending_status_file" not in st.session_state:
 st.session_state.pending_status_file = None
