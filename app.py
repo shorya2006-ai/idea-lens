@@ -45,3 +45,12 @@ pass
 return emp_ids
 if "pending_status_file" not in st.session_state:
 st.session_state.pending_status_file = None
+# ---------------- ADMIN PDF ----------------
+def load_admin_credentials_from_pdf(pdf_path="admin_database_5.pdf"):
+admins = {}
+try:
+with pdfplumber.open(pdf_path) as pdf:
+for page in pdf.pages:
+text = page.extract_text()
+for line in text.split("\n"):
+parts = line.split()
