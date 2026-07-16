@@ -62,3 +62,23 @@ admins[parts[0]] = {
 except:
 pass
 return admins
+# ---------------- TEXT EXTRACTION ----------------
+def extract_text_from_file(uploaded_file):
+text = ""
+try:
+filename = uploaded_file.name.lower()
+if filename.endswith(".pdf"):
+with pdfplumber.open(uploaded_file) as pdf:
+for page in pdf.pages:
+text += page.extract_text() or ""
+elif filename.endswith(".docx"):
+doc = Document(uploaded_file)
+for para in doc.paragraphs:
+text += para.text + "\n"
+elif filename.endswith(".pptx"):
+prs = Presentation(uploaded_file)
+for slide in prs.slides:
+for shape in slide.shapes:
+if hasattr(shape, "text"):
+text += shape.text + "\n"
+else:
