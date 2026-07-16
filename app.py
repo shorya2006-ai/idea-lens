@@ -86,3 +86,22 @@ text = uploaded_file.read().decode(errors="ignore")
 except:
 text = ""
 return text
+# ---------------- AI EXPLANATION ----------------
+def generate_ai_explanation(input_text, matched_text, score):
+try:
+if not matched_text:
+return "No matched content available to generate explanation."
+input_words = set(input_text.lower().split())
+matched_words = set(matched_text.lower().split())
+common_words = list(input_words.intersection(matched_words))
+if score > 0.75:
+level = "highly similar"
+elif score > 0.5:
+level = "moderately similar"
+else:
+level = "mostly different"
+explanation = f"The ideas are {level}."
+if common_words:
+explanation += " Common keywords include: " + ", ".join(common_words[:8])
+else:
+explanation += " There are no strong overlapping keywords but conceptual similarity exists."
