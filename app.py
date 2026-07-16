@@ -54,3 +54,11 @@ for page in pdf.pages:
 text = page.extract_text()
 for line in text.split("\n"):
 parts = line.split()
+if len(parts) >= 4 and parts[0].startswith("ADM"):
+admins[parts[0]] = {
+"name": parts[1] + " " + parts[2],
+"password": parts[3]
+}
+except:
+pass
+return admins
