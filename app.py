@@ -82,3 +82,7 @@ for shape in slide.shapes:
 if hasattr(shape, "text"):
 text += shape.text + "\n"
 else:
+text = uploaded_file.read().decode(errors="ignore")
+except:
+text = ""
+return text
