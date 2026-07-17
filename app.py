@@ -105,3 +105,6 @@ if common_words:
 explanation += " Common keywords include: " + ", ".join(common_words[:8])
 else:
 explanation += " There are no strong overlapping keywords but conceptual similarity exists."
+return explanation
+except:
+return "AI explanation could not be generated"
