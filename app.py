@@ -142,3 +142,9 @@ source.split("(")[-1]
 .replace(")", "")
 .strip()
 )
+contributors.append(employee)
+counts = Counter(contributors)
+return sorted(
+counts.items(),
+key=lambda x: x[1],
+reverse=True
