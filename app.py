@@ -124,3 +124,21 @@ with open(CONTRIBUTOR_FILE, "w") as f:
 json.dump(data, f, indent=4)
 except:
 pass
+def increment_contribution(emp_id):
+try:
+data = load_contributions()
+data[emp_id] = data.get(emp_id, 0) + 1
+save_contributions(data)
+except:
+pass
+def get_top_contributors():
+_, metadata = load_index()
+contributors = []
+for item in metadata:
+source = item.get("source", "")
+if "(" in source and ")" in source:
+employee = (
+source.split("(")[-1]
+.replace(")", "")
+.strip()
+)
