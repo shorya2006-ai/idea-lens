@@ -108,3 +108,19 @@ explanation += " There are no strong overlapping keywords but conceptual similar
 return explanation
 except:
 return "AI explanation could not be generated"
+# ---------- CONTRIBUTOR ANALYTICS ----------
+CONTRIBUTOR_FILE = "contributions.json"
+def load_contributions():
+try:
+if os.path.exists(CONTRIBUTOR_FILE):
+with open(CONTRIBUTOR_FILE, "r") as f:
+return json.load(f)
+except:
+pass
+return {}
+def save_contributions(data):
+try:
+with open(CONTRIBUTOR_FILE, "w") as f:
+json.dump(data, f, indent=4)
+except:
+pass
