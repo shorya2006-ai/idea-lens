@@ -148,3 +148,12 @@ return sorted(
 counts.items(),
 key=lambda x: x[1],
 reverse=True
+SEARCH_HISTORY_FILE = "search_history.json"
+def load_search_history():
+if not os.path.exists(SEARCH_HISTORY_FILE):
+return {}
+try:
+with open(SEARCH_HISTORY_FILE, "r") as f:
+return json.load(f)
+except:
+return {}
