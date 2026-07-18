@@ -178,3 +178,13 @@ data[file_name] = {
 "viewed": False,
 "employee_notified": True
 }
+save_idea_status(data)
+def update_idea_status(file_name, status):
+data = load_idea_status()
+if file_name in data:
+data[file_name]["status"] = status
+data[file_name]["viewed"] = True
+data[file_name]["employee_notified"] = False
+save_idea_status(data)
+def mark_notification_as_read(file_name):
+data = load_idea_status()
