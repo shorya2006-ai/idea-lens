@@ -188,3 +188,6 @@ data[file_name]["employee_notified"] = False
 save_idea_status(data)
 def mark_notification_as_read(file_name):
 data = load_idea_status()
+if file_name in data:
+data[file_name]["employee_notified"] = True
+save_idea_status(data)
