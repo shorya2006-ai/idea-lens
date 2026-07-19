@@ -220,3 +220,10 @@ st.session_state.page = "admin_login"
 with col2:
 if st.button("Employee Login", use_container_width=True):
 st.session_state.page = "employee_login"
+# ---------------- ADMIN LOGIN ----------------
+elif st.session_state.page == "admin_login":
+st.title("Admin Login")
+admin_id = st.text_input("Admin ID")
+password = st.text_input("Password", type="password")
+if st.button("Login"):
+admins = load_admin_credentials_from_pdf()
