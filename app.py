@@ -210,3 +210,13 @@ if emp_id not in data:
 data[emp_id] = []
 data[emp_id].append(search_text)
 save_search_history(data)
+# ---------------- DASHBOARD ----------------
+if st.session_state.page == "dashboard":
+st.markdown("<h1 style='text-align:center;'>AI Idea Duplicate Detector</h1>", unsafe_allow_html=True)
+col1, col2 = st.columns(2)
+with col1:
+if st.button("Admin Login", use_container_width=True):
+st.session_state.page = "admin_login"
+with col2:
+if st.button("Employee Login", use_container_width=True):
+st.session_state.page = "employee_login"
