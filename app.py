@@ -233,3 +233,15 @@ st.session_state.admin_name = admins[admin_id]["name"]
 st.session_state.page = "main"
 else:
 st.error("Invalid credentials")
+# ---------------- EMPLOYEE LOGIN ----------------
+elif st.session_state.page == "employee_login":
+st.title("Employee Login")
+emp_id = st.text_input("Employee ID")
+if st.button("Login"):
+valid_ids = load_employee_ids_from_pdf()
+if emp_id in valid_ids:
+st.session_state.user_type = "employee"
+st.session_state.emp_id = emp_id
+st.session_state.page = "main"
+else:
+st.error("Invalid Employee ID")
