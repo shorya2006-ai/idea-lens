@@ -245,3 +245,14 @@ st.session_state.emp_id = emp_id
 st.session_state.page = "main"
 else:
 st.error("Invalid Employee ID")
+# ---------------- MAIN ----------------
+elif st.session_state.page == "main":
+# Top bar (Logout right)
+col1, col2 = st.columns([10, 1])
+with col1:
+st.title("AI Idea Duplicate Detector")
+with col2:
+if st.button("Logout"):
+st.session_state.page = "dashboard"
+st.session_state.user_type = None
+st.rerun()
