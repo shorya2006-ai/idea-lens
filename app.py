@@ -256,3 +256,19 @@ if st.button("Logout"):
 st.session_state.page = "dashboard"
 st.session_state.user_type = None
 st.rerun()
+# ================= EMPLOYEE STATUS NOTIFICATIONS =================
+if st.session_state.user_type == "employee":
+emp_id = st.session_state.emp_id
+idea_data = load_idea_status()
+for idea_name, details in idea_data.items():
+if details.get("employee") == emp_id:
+if details.get("employee_notified", True):
+continue
+status = details.get("status")
+if status == "Revisit":
+st.warning(
+f'The admin wants you to revisit your idea "{idea_name}" and make relevant changes
+and updates and submit it again.'
+)
+mark_notification_as_read(
+idea_name
