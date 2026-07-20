@@ -227,3 +227,9 @@ admin_id = st.text_input("Admin ID")
 password = st.text_input("Password", type="password")
 if st.button("Login"):
 admins = load_admin_credentials_from_pdf()
+if admin_id in admins and password == admins[admin_id]["password"]:
+st.session_state.user_type = "admin"
+st.session_state.admin_name = admins[admin_id]["name"]
+st.session_state.page = "main"
+else:
+st.error("Invalid credentials")
