@@ -23,3 +23,12 @@ from status_manager import (
     update_idea_status,
     mark_notification_as_read
 )
+from contributor_manager import (
+    get_top_contributors
+)
+
+from history_manager import (
+    load_search_history,
+    save_search_history,
+    add_search_history
+)
