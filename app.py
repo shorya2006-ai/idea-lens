@@ -32,3 +32,10 @@ from history_manager import (
     save_search_history,
     add_search_history
 )
+from admin_dashboard import (
+    show_admin_dashboard
+)
+
+from employee_dashboard import (
+    show_employee_dashboard
+)
